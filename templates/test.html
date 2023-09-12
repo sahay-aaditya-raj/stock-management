@@ -1,0 +1,87 @@
+<!--
+    urls.py
+
+    path('trial/', views.your_view, name='trial'),
+    path('trial2/' , views.new, name='trial2'),
+
+
+    views.py
+
+    from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt  # Use this decorator if you disable CSRF protection for the view
+def your_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            # Process the JSON data here
+            # ...
+
+            return JsonResponse({'message': 'Data received and processed'})
+        except json.JSONDecodeError as e:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+def new(request):
+    return render(request, 'test.html')
+-->
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+    <form id="data-form">
+        <input type="text" id="name" name="name" placeholder="Name">
+        <input type="text" id="email" name="email" placeholder="Email">
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('data-form');
+        
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
+        
+                const formData = new FormData(form);
+                const formDataObject = {};
+                formData.forEach((value, key) => {
+                    formDataObject[key] = value;
+                });
+        
+                const jsonData = JSON.stringify(formDataObject);
+        
+                // Send jsonData to the server using AJAX (e.g., fetch or XMLHttpRequest)
+                sendDataToServer(jsonData);
+            });
+        });
+        
+        function sendDataToServer(data) {
+            fetch('{% url "trial" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCSRFToken(), // Include CSRF token if required
+                },
+                body: data,
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Server response:', result);
+                // Handle the response from the server
+            })
+            .catch(error => {
+                console.error('Error sending data:', error);
+            });
+        }
+        
+        function getCSRFToken() {
+            const csrfCookie = document.cookie.match(/csrftoken=([\w-]+)/);
+            return csrfCookie ? csrfCookie[1] : '';
+        }
+        
+    </script>
+</body>
+</html>

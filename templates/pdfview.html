@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PDF {{sv_inv.name}}</title>
+        <style>
+            .header{
+                display:grid;
+                grid-template-columns: 1fr 10fr;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class='header'>
+            <div><img src='{% static "azteclogo.png" %}'></div>
+            <div style='margin-left:-80px'>
+            <div style='text-align:center;'>
+                <h2 style='margin:0px; padding:0px;'>{{company.name}}</h2>
+                <h5 style='margin:0px; padding:0px;'>{{company.address}}</h5>
+                <h5 style='margin:0px; padding:0px;'>{{company.city}}</h5>
+                <h4 style='margin:0px; padding:0px;'>GSTID: {{company.gst}}</h4>
+                <h4 style='margin:0px; padding:0px;'>DL. No: {{company.dlno}}</h4>
+                <p style='margin:0px; padding:0px;'>E.Mail: <b>{{company.email}}</b></p>
+                <p style='margin:0px; padding:0px;'>Phone: <b>{{company.phoneno}}</b></p>
+            </div>
+        </div>
+        </div>
+        <div>
+            {% if not sv_inv.rate %}
+                {% include 'pdf.html' %}
+            {% elif sv_inv.rate %}
+                {% include 'ratepdf.html' %}
+            {% endif %}
+        </div>
+        <div style='margin-top:10px;'>
+            1) Intrest @ 24% p.a. will be charged after 21 days from dispatch for outstation party and consignment will be recalled if the payement is not received within 21 days from the date of dispatch.<br/>
+            2) Any dealing with the company personel in cash/goods will be entire responsibility of the Distributor/Consigee Agent/ Stockist.<br/>
+            3) Any Dispute arising out of this sales contract is subject to Patna Jurisdiction Only.
+        </div>
+        <div style='display:grid; grid-template-columns:1fr 1fr 2fr;margin-top:25px;font-size:18px;'>
+            <div style='text-align:center;'><b>Prepared By</b></div>
+            <div style='text-align:center;'><b>Packed By</b></div>
+            <div style='text-align:center;'><b>For Aztec Lifescience Pvt. Ltd.</b></div>
+        </div>
+        <script>window.print()</script>
+    </body>
+</html>

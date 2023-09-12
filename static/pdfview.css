@@ -1,0 +1,26 @@
+.inv-info{
+    width:100%;
+    display:grid;
+    margin:10px 0px 0px 0px;
+    grid-template-columns: 1fr 1fr;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #848484;
+    
+  }
+  
+  th, td {
+    padding: 5px 5px;
+    text-align: center;
+    border: 1px solid #848484;
+  }
+  .conclusion{
+    display:grid;
+    grid-template-columns: 7fr 2fr;
+    margin-top:10px;
+    text-align: right;
+    font-size: 20px;
+    
+  }

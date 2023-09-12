@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'party.css' %}">
+<style>
+
+</style>
+<a href='{% url "home" %}' class='home'>Home Page</a>
+
+<form method='POST' >
+    {% csrf_token %}
+    <div class='container'>
+        <div style='padding:20px 20px 20px 20px; border-radius:20px; box-shadow:5px 5px 4px 4px #878787; background-color:#dee7ff'>
+            <div style='font-size:25px;margin-bottom:10px;'><b>Edit Party's Details</b></div>
+            
+        <div class='form'>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Party's Name *</div>
+                <input type='text' class='option' placeholder="Enter Party's Name" name='name' id='name'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Mobile Number *</div>
+                <input type='text' class='option' placeholder="Enter Party's Mobile No" name='mbno' id='mbno'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;GSTID *</div>
+                <input type='text' class='option' placeholder='Enter GSTID' name='gst' id='gst'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;DL No. *</div>
+                <input type='text' class='option' placeholder='Enter DL Number' name='dlno' id='dlno'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Address Line 1 *</div>
+                <input type='text' class='option' placeholder='Enter Address Line 1' name='add1' id='add1'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Address Line 2</div>
+                <input type='text' class='option' placeholder='Enter Address Line 2' name='add2' id='add2'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Address Line 3</div>
+                <input type='text' class='option' placeholder='Enter Address Line 3' name='add3' id='add3'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;City *</div>
+                <input type='text' class='option' placeholder='Enter City' name='city' id='city'/>
+            </div>
+        </div>
+        <button type='submit' onclick='alert("Edit Successfull !")'>Edit Party</button>
+    </div>
+    </div>
+</form>
+
+{% if err %}
+<script>
+    alert('{{msg}}');
+    location.reload();
+</script>
+{% endif %}
+<script>
+    var party = JSON.parse('{{party|safe}}');
+    console.log(party)
+    const inputs = document.querySelectorAll('input')
+    inputs[1].value = party.name;
+    inputs[2].value = party.mbno;
+    inputs[3].value = party.gst;
+    inputs[4].value = party.dlno;
+    inputs[5].value = party.add1;
+    inputs[6].value = party.add2;
+    inputs[7].value = party.add3;
+    inputs[8].value = party.city;
+</script>
+{% endblock %}

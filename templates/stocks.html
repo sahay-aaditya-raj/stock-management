@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'stock.css' %}">
+<style>
+
+thead{
+    font-size:20px;
+}
+.stock{
+    display:grid;
+    grid-template-columns: 3fr 1fr;
+    gap:10px;
+}
+tbody tr:hover{
+cursor:pointer;
+}
+a{
+    text-decoration:none;
+}
+thead tr:hover{
+    cursor:alias;
+}
+thead tr th:hover{
+    background-color: #d35b24;
+}
+.option{
+    width: 250px;
+    padding: 10px;
+    margin-left:0px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    transition:0.2s;
+}
+.option:hover{
+    box-shadow: inset 0 0 8px 1px rgba(144, 92, 37, 0.7);
+}
+.option:focus{
+    box-shadow: inset 0 0 8px 1px rgba(144, 92, 37, 0.7);
+    border: 1px solid #ccc;
+}
+.new{
+    margin:20px 20px 20px 20px;
+    padding: 20px 20px 20px 35px;
+    background-color: rgb(247, 238, 255);
+    border-radius: 10px;
+    box-shadow: 4px 4px 3px 2px #ccc;
+}
+button:hover{
+    cursor: pointer;
+}
+</style>
+<a href='{% url "home" %}' class='home'>Home Page</a>
+
+<div style='margin:20px 10px 0px 10px;'>
+    <div class='stock'>
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th onclick='sortTable("name")'>Product Name</th>
+                        <th onclick='sortTable("batch")'>Batch No.</th>
+                        <th onclick='sortTable("manufacturer")'>Manufacturer</th>
+                        <th><a onclick='sortTable("pack")'>Pack</a></th>
+                        <th><a onclick='sortTable("expiry")'>Expiry</a></th>
+                        <th><a onclick='sortTable("quantity")'>Quantity</a></th>
+                    </tr>
+                </thead>
+                <tbody id='stockTable'>
+                    
+                </tbody>
+            </table>
+        </div>
+        <div>
+            <form method='POST'>
+                {% csrf_token %}
+                <div class='new'>
+                    <div style='font-size:25px;text-align:center;margin-bottom:20px;'><b>Add a New Stock</b></div>
+                    <div style='font-size:20px; text-align:left'>
+                        &nbsp;Select Product<br/>
+                        <select class='option' name='product' id='product' style='width:270px;'>
+                            <option value=''>Select Product</option>
+                            {% for product in products %}
+                            <option value='{{product.id}}'>{{product|upper}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style='font-size:20px; text-align:left; margin-top:10px'>
+                        &nbsp;Batch No<br/>
+                        <input class='option' type='text' placeholder='Enter Batch No.' name='batch'/>
+                    </div>
+                    <div style='font-size:20px; text-align:left; margin-top:10px'>
+                        &nbsp;Quantity<br/>
+                        <input class='option' type='number' placeholder='Enter Quantity' name='quantity'/>
+                    </div>
+                    <div style='font-size:20px; text-align:left; margin-top:10px'>
+                        &nbsp;Expiry Date<br/>
+                        <input class='option' type='date' name='date'/>
+                    </div>
+                    <div style='margin-top:10px;text-align:center;'>
+                    <button type='Submit' class='home' style='border:none'>Add New Stock</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    var stock = JSON.parse('{{json_stock|safe}}')
+</script>
+<script src='{% static "stock.js" %}'></script>
+{% if err %}
+<script>
+    alert('Please Fill the Required Details !');
+    location.reload();
+
+</script>
+{% endif %}
+{% endblock %}

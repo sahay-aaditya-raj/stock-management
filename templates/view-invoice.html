@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load custom_filters %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'pdfview.css' %}">
+<style>
+    .box{
+        margin: 10px 300px 0px 200px;
+        padding:15px;
+        border-radius: 10px;
+        background-color: #dddddd;
+        box-shadow: 5px 5px 8px 4px #757575;
+    }      
+    th {
+        background-color: #ff6e2b;
+        font-weight: bold;
+      }
+      
+    tbody tr:nth-child(odd) {
+      background-color: #e9ffad;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #ffd0a6;
+    }
+    tbody tr:hover {
+      background-color: #e0e0e0;
+    }
+    input[type='checkbox']{
+      transform: scale(1.6);
+    }
+</style>
+
+<a href='{% url "home" %}' class='home'>Home Page</a>
+<a href="{% url 'pdfview' pk %}" class='home' style='margin-left:85px; background-color:#ff6e2b;'>Print This Invoice</a>
+
+<div style='margin-top:10px;font-size:25px;padding-left:200px;'>
+  {% if sv_inv.paid %}
+  Paid: Yes <input type='checkbox' id='checkbox' name='checkbox' checked=true/>
+  {% else %}
+  Paid: No <input type='checkbox' id='checkbox' name='checkbox'/>
+  {% endif %}
+</div>
+
+<div class='box'>
+  {% if not sv_inv.rate %}
+    {% include 'pdf.html' %}
+  {% elif sv_inv.rate %}
+    {% include 'ratepdf.html' %}
+  {% endif %}
+</div>
+
+<script>
+  const chckbox = document.getElementById('checkbox');
+  chckbox.addEventListener('click', function(){
+    console.log(this.checked)
+    if(this.checked){
+      const conf = confirm('Are you sure that this invoice is PAID?');
+      if (conf){
+        window.location.href = "{% url 'view-saved-invoice' pk %}?q=ok";
+      } else{
+        this.checked = false;
+      }
+    } else if (!this.checked) {
+        const conf = confirm('Are you sure that this invoice is UN-PAID?');
+        if (conf){
+          window.location.href = "{% url 'view-saved-invoice' pk %}?q=no";
+        } else{
+          this.checked = true;
+        }
+      }
+    }
+  );
+</script>
+{% endblock %}

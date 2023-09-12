@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'stock.css' %}">
+<style>
+.add{
+  background-color:rgb(255, 110, 110);
+}
+.add:hover{
+  background-color:rgb(227, 98, 98);
+}
+thead{
+    font-size:20px;
+}
+
+tbody tr:hover{
+cursor:pointer;
+}
+a{
+    text-decoration:none;
+}
+thead tr:hover{
+    cursor:alias;
+}
+thead tr th:hover{
+    background-color: #d35b24;
+}
+.option{
+    width: 250px;
+    padding: 10px;
+    margin-left:0px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+    transition:0.2s;
+}
+.option:hover{
+    box-shadow: inset 0 0 8px 1px rgba(144, 92, 37, 0.7);
+}
+.option:focus{
+    box-shadow: inset 0 0 8px 1px rgba(144, 92, 37, 0.7);
+    border: 1px solid #ccc;
+}
+.new{
+    margin:20px 20px 20px 20px;
+    padding: 20px 20px 20px 35px;
+    background-color: rgb(247, 238, 255);
+    border-radius: 10px;
+    box-shadow: 4px 4px 3px 2px #ccc;
+}
+button:hover{
+    cursor: pointer;
+}
+</style>
+
+<a href='{% url "home" %}' class='home'>Home Page</a><br/>
+<div style='margin-top:20px'><a href='{% url "add-party" %}' class='home add' >Add A New Party</a></div>
+<div style='margin:20px 10px 0px 10px;'>
+  <div>
+      <div>
+          <table>
+              <thead>
+                  <tr>
+                      <th onclick='sortTable("name")' style='width:20%'>Name</th>
+                      <th onclick='sortTable("gstid")' style='width:30%'>GSTID</th>
+                      <th onclick='sortTable("dlno")' style='width:30%'>DL No.</th>
+                      <th onclick='sortTable("city")' style='width:20%'>City</th>
+                  </tr>
+              </thead>
+              <tbody id='stockTable'>
+                  
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+<script>
+  var stock = JSON.parse('{{party|safe}}')
+</script>
+<script src='{% static "party.js" %}'></script>
+{% endblock %}

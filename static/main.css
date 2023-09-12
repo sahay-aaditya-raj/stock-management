@@ -1,0 +1,26 @@
+/* ----------------base--------------- */
+body{
+    width:100vw;
+    
+    margin:0;
+    padding:0;
+    background-color:#ffdada;
+    font-family: 'Roboto';
+}
+.home{
+    text-decoration: none;
+    background-color: rgb(118, 177, 255);
+    margin-left:10px;
+    font-size:20px;
+    color:black;
+    border-radius:5px;
+    padding:5px;
+    box-shadow: 2px 2px 3px 0px #939393;
+}
+.home:hover{
+    background-color: rgb(86, 130, 188);
+}
+a:hover{
+    cursor:pointer;
+}
+/* ----------------base--------------- */

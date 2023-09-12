@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'party.css' %}">
+<style>
+
+</style>
+<a href='{% url "home" %}' class='home'>Home Page</a>
+
+<form method='POST' >
+    {% csrf_token %}
+    <div class='container'>
+        <div style='padding:20px 20px 20px 20px; border-radius:20px; box-shadow:5px 5px 4px 4px #878787; background-color:#dee7ff'>
+            <div style='font-size:25px;margin-bottom:10px;'><b>Add New Party</b></div>
+        <div class='form'>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Party's Name *</div>
+                <input type='text' class='option' placeholder="Enter Party's Name" name='name'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Mobile No *</div>
+                <input type='text' class='option' placeholder="Enter Party's Mobile No" name='mbno'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;GSTID *</div>
+                <input type='text' class='option' placeholder='Enter GSTID' name='gst'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;DL No. *</div>
+                <input type='text' class='option' placeholder='Enter DL Number' name='dlno'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Address Line 1 *</div>
+                <input type='text' class='option' placeholder='Enter Address Line 1' name='add1'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Address Line 2</div>
+                <input type='text' class='option' placeholder='Enter Address Line 2' name='add2'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;Address Line 3</div>
+                <input type='text' class='option' placeholder='Enter Address Line 3' name='add3'/>
+            </div>
+            <div>
+                <div style='font-size:20px;'>&nbsp;City *</div>
+                <input type='text' class='option' placeholder='Enter City' name='city'/>
+            </div>
+        </div>
+        <button type='submit'>Save New Party</button>
+    </div>
+    </div>
+</form>
+
+{% if err %}
+<script>
+    alert('{{msg}}');
+    location.reload();
+</script>
+{% endif %}
+{% endblock %}

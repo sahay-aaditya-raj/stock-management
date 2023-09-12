@@ -1,0 +1,85 @@
+{% load custom_filters %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'pdfview.css' %}">
+
+
+  <div style='font-size:30px;'>Invoice Number: <b>{{ sv_inv.invoicenumber }}</b></div>
+    <div style='font-size:20px;margin-top:5px;'>Name: <b>{{sv_inv.name|upper}}</b></div>
+
+    <div class='inv-info'><!--content-->
+        <div style='font-size:18px;'>
+          <b>Address:</b><br>{{sv_inv.address1|upper}},<br/>
+          {% if sv_inv.address2 != ''%}
+          {{sv_inv.address2|upper}},<br/>
+          {% endif %}
+          {% if sv_inv.address3 != ''%}
+          {{sv_inv.address3|upper}},<br/>
+          {% endif %}
+          {{sv_inv.city|upper}}<br/>
+          <b>Mobile:</b> {{sv_inv.mbno}}
+        </div>
+        <div style='font-size:18px; text-align:right;'>
+          <span>Date : <b>{{sv_inv.date}}</b> </span> <br/>
+          <span>GST.ID : <b>{{sv_inv.gstid|upper}}</b></span><br/>
+          <span>DL.No : <b>{{sv_inv.dlno|upper}}</b></span> 
+        </div>
+        
+    </div>
+    <div style='margin-top:10px;'>
+        <table>
+          <thead style='font-size:17px;'>
+            <tr>
+              <th style='width:10px;'>S.No.</th>
+              <th>Description</th>
+              <th>Pack</th>
+              <th>Mfg. By</th>
+              <th>Batch No.</th>
+              <th>Expiry</th>
+              <th style='text-align:right;'>QTY</th>
+              <th style='text-align:right;'>RATE</th>
+              <th style='text-align:right;'>MRP</th>
+              <th style='text-align:right;'>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sv_ent in sv_ents %}
+            <tr>
+                <td>{{sv_ent.sno}}</td>
+                <td>{{sv_ent.description|upper}}</td>
+                <td>{{sv_ent.pack}}</td>
+                <td>{{sv_ent.mfg}}</td>
+                <td>{{sv_ent.batchNo}}</td>
+                <td>{{sv_ent.expiry}}</td>
+                <td style='text-align:right;'>{{sv_ent.qty}}</td>
+                <td style='text-align:right;'>{{sv_ent.rate}}</td>
+                <td style='text-align:right;'>{{sv_ent.mrp}}</td>
+                <td style='text-align:right;'>{{sv_ent.amount}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class='conclusion'>
+          <div style='text-align:left;'>
+            <b>Total Quantity:</b> {{tot_qty}}
+          </div>
+          <div style='display: flex;
+          justify-content: flex-end;'>
+          <div style='display:grid; grid-template-columns:100px 100px; grid-template-rows:20px 20px 20px 20px; row-gap:5px;'>
+            <div><b>Sub-Total:</b></div>
+            <div>{{sum_all|intcomma}}</div>
+            <div><b>CGST-{{sv_inv.gst}}%:</b></div>
+            <div>{{gst|intcomma}}</div>
+            <div><b>SGST-{{sv_inv.gst}}%:</b></div>
+            <div>{{gst|intcomma}}</div>
+            <div><b>Total:</b></div>
+            <div>{{total|intcomma}}</div>
+          </div>
+        </div>
+        </div>
+        <div style='font-size:20px;'>
+          Net Payable:<b> &nbsp;&nbsp;₹ {{total|round|intcomma}} /-</b><br/>
+          <b>Rs. {{total|round|num_words}} Only</b>
+        </div>
+
+    </div>

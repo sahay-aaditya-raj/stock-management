@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load custom_filters %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'viewinv.css' %}">
+
+<a href='{% url "home" %}' class='home'>Home Page</a>
+<div style='font-size:30px; padding-left:10px;margin-top:10px;'>
+Invoice Number: <b>{{ inv.invoicenumber }}</b><br/>
+<span style='font-size:20px;'>Name: <b>{{inv.costumer.name}}</b></span>
+</div>
+<div class='inv-part'>
+  <div>
+
+    <div class='inv-info'><!--content-->
+      <div style='font-size:18px;'>
+        <b>Address:</b><br>{{inv.costumer.addressLine_1}},<br/>
+        {% if inv.costumer.addressLine_2 != '' %}
+        {{inv.costumer.addressLine_2}},<br/>
+        {% endif %}
+        {% if inv.costumer.addressLine_3 != '' %}
+        {{inv.costumer.addressLine_3}},<br/>
+        {% endif %}
+        {{inv.costumer.city}}<br/>
+        {{inv.costumer.mbno}}
+      </div>
+      <div style='font-size:18px; text-align:right;'>
+        <span>Date : <b>{{inv.date}}</b> </span> <br/>
+        <span>GST.ID : <b>{{inv.costumer.gstid}}</b></span><br/>
+        <span>DL.No : <b>{{inv.costumer.dlno}}</b></span> 
+      </div>
+    </div>
+
+    <!--Inv Entries-->
+    <div style='margin-top:10px;'>
+      <table>
+        <thead style='font-size:17px;'>
+          <tr>
+            <th style='width:10px;'>S.No.</th>
+            <th>Description</th>
+            <th>Pack</th>
+            <th>Mfg. By</th>
+            <th>Batch No.</th>
+            <th>Expiry</th>
+            <th>MRP</th>
+            <th>PTR</th>
+            <th>PTS</th>
+            <th>QTY</th>
+            <th>Bonus</th>
+            <th style='text-align:right;'>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          {% for en in ent %}
+          {% with temEn=ent|dictVal:en %}
+          
+          
+            <tr onclick="deleteInvoice(`{% url 'del-temp-ent' temEn.id %}`)">
+              <td>{{ en }}</td>
+              <td>{{ temEn.product.product.name|upper }}</td>
+              <td>{{ temEn.product.product.volume }}</td>
+              <td>{{ temEn.product.product.manufacturer }}</td>
+              <td>{{ temEn.product.batch }}</a></td>
+              <td>{{ temEn.product.expiry|date:"d/m/Y" }}</td>
+              <td>{{ temEn.mrp }}</td>
+              <td>{{ temEn.ptr }}</td>
+              <td>
+                {% if temEn.pts != None %}
+                 {{ temEn.pts }}
+                {% else %}
+                -
+                {% endif %}
+              </td>
+            
+              <td>{{ temEn.qty }}</td>
+              <td>{{ temEn.bonus}}</td>
+              <td style='text-align:right;'>
+                {% if temEn.pts != None %}
+                {{ temEn.qty|multiply:temEn.pts|intcomma}}
+                {% else %}
+                {{ temEn.qty|multiply:temEn.pts|intcomma}}
+                {% endif %}
+              </td>
+            </tr>
+          
+          
+          {% endwith %}
+          {% endfor %}
+          
+        </tbody>
+      </table>
+    </div>
+    <div class='total'>
+      <div style='text-align:left'><b>Total Quantity:</b> {{qty}}</div>
+      <div style='display:flex;justify-content:flex-end;'>
+        
+          <table class='total-table'>
+            <tbody style='border:none'>
+              <tr>
+                <td><b>Sub-Total: </b></td>
+                <td>{{amt|intcomma}}</td>
+              </tr>
+              <tr>
+                <td><b>CGST {{inv.gstrate}}%: </b></td>
+                <td>{{amt|gstrate:inv.gstrate|intcomma}}</td>
+              </tr>
+              <tr>
+                <td><b>SGST {{inv.gstrate}}%: </b></td>
+                <td>{{amt|gstrate:inv.gstrate|intcomma}}</td>
+              </tr>
+              <tr>
+                <td><b>Total: </b></td>
+                <td>{{amt|total:inv.gstrate|intcomma}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+      </div>
+    </div>
+
+    <div style='font-size:20px;margin-top:20px;'>
+      Net Payable: <b>₹ {{amt|total:inv.gstrate|round|intcomma}} /-</b><br/>
+      <b> Rs. {{amt|total:inv.gstrate|round|num_words}} Only</b>
+      <div style='margin-top:20px;'>
+        <a onclick="confirmMSG()" class='submit'>Save Invoice</a>
+      </div>
+    </div>
+
+  </div>
+
+  
+  <div style='background-color:rgb(255, 255, 255); padding:15px; margin-left:120px; margin-right:80px; box-shadow:3px 3px 0px 0px rgba(0,0,0,0.2); border-radius:10px;border:3px solid rgba(67, 109, 57, 0.693)'>
+    <form method='POST' id='myform'>
+      {% csrf_token %}
+      <div>
+        <div style='font-size:24px'><b>Add a Product to this invoice</b></div>
+        <div style='display:grid; grid-template-rows:25px 49px 25px auto; margin-top:10px;'>
+          <div class='hint'>Product:</div>
+          <div>
+            <select name='product' id='product' class='input-option'>
+              <option value='none'>Select a Product</option>
+              {% for product in products %}
+              <option value='{{product.name}}'>{{product}}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class='hint'>Stock:</div>
+            <div>
+              <select name='stock' id='stock' class='input-option'>
+              <option value='none'>Select a Stock</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div id='stockDetails' style='display:grid; margin:10px; grid-template-columns:1fr 1fr; grid-template-rows: auto auto; grid-column-gap:10px; grid-row-gap:3px; font-size:18px;'>
+
+        </div>
+        <div style='display:grid; grid-template-columns:1fr 1fr; margin-bottom:10px;'>
+          <div>
+            <div class='hint'>MRP:</div>
+            <input type='text' class='input-option' style='width:100px; margin-bottom:10px;' name='mrp' id='mrp' placeholder="MRP"/><br/>
+            <div class='hint'>PTR:</div>
+            <input type='text' class='input-option' style='width:100px;margin-bottom:10px;' name='ptr' placeholder="PTR" id='ptr'/>
+            <div class='hint'>Bonus: </div>
+            <input type='number' class='input-option' style='width:100px; margin-bottom:10px;' name='bonus' placeholder="Bonus" id='bonus'/>
+          </div>
+          <div>
+            <div class='hint'>PTS:</div>
+            <input type='text' class='input-option' style='width:100px; margin-bottom:10px;' name='pts' placeholder="PTS" id='pts'/>
+            <div class='hint'>QTY:</div>
+            <input type='number' class='input-option' style='width:100px;margin-bottom:20px;' name='qty' placeholder="QTY" id='qty'/>
+          
+        </div>
+        
+        <input type='submit' class='submit' style='border:none' value='Add Entry'>
+    </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+  var jsonData = JSON.parse('{{ json_stock|safe }}')
+  function confirmMSG() {
+    const conf = confirm('Are you sure you want to Save this invoice? \nOnce saved, cant be edited again.')
+    if (conf){
+      window.location.href = "{% url 'save-invoice' inv.id %}"
+    }
+  }
+
+</script>
+<script src="{% static 'new-temp-inv.js' %}"></script>
+{% endblock %}

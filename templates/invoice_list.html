@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+{% load custom_filters %}
+<link rel="stylesheet" href="{% static 'stock.css' %}">
+<style>
+    .button{
+        background-color: #ce5f5f;
+        box-shadow: 2px 2px 3px 0px #939393;
+    }
+    .button:hover{
+        background-color: #b35252 ;
+    }
+    thead tr:hover{
+        cursor:alias;
+    }
+    thead tr th:hover{
+        background-color: #d35b24;
+    }
+</style>
+
+<a href='{% url "home" %}' class='home'>Home Page</a>
+<div style='margin-top:20px'>
+    <a href='{% url "new-inv-menu" %}' class='home button'>Create a New Invoice</a>
+</div>
+
+
+<div style='margin: 20px 10px 0px 10px;font-size:18px;'>
+    <div style='text-align:right; margin:0px 10px 5px 0px;'>
+        Paid Amount: <b>₹ {{paid|intcomma}}</b> &nbsp; | &nbsp; Unpaid Amount: <b>₹ {{unpaid|intcomma}}</b>
+    </div>
+<table>
+    <thead>
+        <tr>
+        <th style="width:6%;" onclick="sortTable('inv')">Inv No.</th>
+        <th style='width:15%' onclick="sortTable('name')">Name</th>
+        <th style='width:14%' onclick="sortTable('date')">Date</th>
+        <th style='width:15%' onclick="sortTable('gstid')">GST ID</th>
+        <th style='width:15%' onclick="sortTable('dlno')">DL No</th>
+        <th onclick="sortTable('city')">Location</th>
+        <th style='padding-right:20px;text-align:right;width:10%' onclick="sortTable('amount')">Amount</th>
+        <th style='width:5%' onclick="sortTable('paid')">Paid</th>
+        </tr>
+    </thead>
+    <tbody id='invlist'>
+
+    </tbody>
+</table>
+</div>
+
+
+<script>
+    var sv_inv_list = JSON.parse('{{ sv_inv_list|safe }}');
+</script>
+<script src="{% static 'inv_list.js' %}"></script>
+
+
+{% endblock %}

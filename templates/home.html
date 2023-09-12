@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .home-container{
+        width:400px;
+        border-radius: 10px;
+        border:solid;
+        border-color:#000000;
+        border-width: 1px;
+        margin-left:30px;
+        margin-top:20px;
+        background-color:#FFF;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        padding:10px;
+        display:flex;
+        flex-direction: column;
+        row-gap: 10px;
+        box-shadow: 4px 4px 4px 0px #939393;
+    }
+    .redirect{
+        width:80%;
+        padding:5px;
+        font-size:30px;
+        color:#000000;
+        border-radius:6px;
+        background-color: #ce5f5f;
+        box-shadow: 2px 2px 3px 0px #939393;
+        text-decoration: none;
+    }
+    .redirect:hover{
+        background-color: #b35252 ;
+    }
+</style>
+
+<div class='home-container'>
+    <a href='{% url "stocks" %}' class='redirect'>
+        Stocks
+    </a>
+    <a href='{% url "invoice-list" %}' class='redirect'>
+        Invoice
+    </a>
+    <a href='{% url "products" %}' class='redirect'>
+        Product List
+    </a>
+    <a href='{% url "party" %}' class='redirect'>
+        Party List
+    </a>
+    <a href='{% url "manufacturer" %}' class='redirect'>
+        Manufacturer List
+    </a>
+    <a href='/admin' class='redirect'>
+        Admin
+    </a>
+</div>
+
+{% endblock %}
